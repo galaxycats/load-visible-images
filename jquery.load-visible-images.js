@@ -10,31 +10,31 @@
  
 (function( $ ){
   
+  var defaults = {
+    'effectBefore' : 'hide',
+    'effectAfter' : 'fadeIn',
+    'bindEvent' : 'scroll'
+  };
+  var settings;
+  
   var methods = {
     
     init : function( options ) {
-
-      var settings = {
-        'effect' : 'fadeIn' // not in use at the moment
-      };
-      if ( options ) { 
-        $.extend( settings, options );
-      };
-      
-      $(this).scroll(function(){ $(this).loadVisibleImages("checkForVisibility"); });
+      settings = $.extend({}, defaults, settings, options );
+      $(this).bind(settings.bindEvent, function(){ $(this).loadVisibleImages("checkForVisibility"); });
       $(this).loadVisibleImages("checkForVisibility");
-      
     },
     
     checkForVisibility : function() {
       var visHeight = $(this).height();
-      
       $(this).find("img").each(function(){
         var $this = $(this);
         if($this.position().top <= visHeight){
           if($this.data("img-src")) {
             if($this.attr("src") != $this.data("img-src")){
+              if(settings.effectBefore){ $this[settings.effectBefore].call($this); }
               $this.attr("src", $this.data("img-src"));
+              if(settings.effectAfter){ $this[settings.effectAfter].call($this); }
             }
           }
         }
