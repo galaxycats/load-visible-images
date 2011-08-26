@@ -11,8 +11,6 @@
 (function( $ ){
   
   var defaults = {
-    'effectBefore' : 'hide',
-    'effectAfter' : 'fadeIn',
     'bindEvent' : 'scroll'
   };
   var settings;
@@ -27,14 +25,19 @@
     
     checkForVisibility : function() {
       var visHeight = $(this).height();
-      $(this).find("img").each(function(){
+      $(this).find("img[data-img-src]").each(function(){
         var $this = $(this);
         if($this.position().top <= visHeight){
           if($this.data("img-src")) {
             if($this.attr("src") != $this.data("img-src")){
-              if(settings.effectBefore){ $this[settings.effectBefore].call($this); }
-              $this.attr("src", $this.data("img-src"));
-              if(settings.effectAfter){ $this[settings.effectAfter].call($this); }
+              var img = new Image();
+              $(img).attr("src", $this.data("img-src"));
+              $(img).load(function(){
+                $this.animate({opacity:0.0}, 1, function(){
+                  $this.attr("src", img.src);
+                  $this.animate({opacity:1.0});
+                });
+              });
             }
           }
         }
