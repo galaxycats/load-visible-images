@@ -31,13 +31,13 @@
           if($this.data("img-src")) {
             if($this.attr("src") != $this.data("img-src")){
               var img = new Image();
-              $(img).attr("src", $this.data("img-src"));
               $(img).load(function(){
                 $this.animate({opacity:0.0}, 1, function(){
                   $this.attr("src", img.src);
                   $this.animate({opacity:1.0});
                 });
               });
+              $(img).attr("src", $this.data("img-src"));
             }
           }
         }
